@@ -1,62 +1,94 @@
 <template>
   <div class="calculatorContainer">
-    <NameBar />
+    <TopBar />
     <InputField />
     <div class="buttons">
-        <ButtonTile class="button" v-for="(value, key) in buttonsValues" :value="value" :key="key"/>
+      <ButtonTile
+        v-for="(value, key) in buttonsValues"
+        :value="value"
+        :key="key"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import InputField from "./InputField.vue";
-import NameBar from "./NameBar/NameBar.vue";
-import ButtonTile from "./ButtonTile.vue"
+import TopBar from "./NameBar/TopBar.vue";
+import ButtonTile from "./ButtonTile.vue";
 export default {
   components: {
-    NameBar,
+    TopBar,
     InputField,
-    ButtonTile
+    ButtonTile,
   },
-  data(){
-    return{
-        buttonsValues: []
-    }
+  data() {
+    return {
+      buttonsValues: [],
+    };
   },
-  beforeMount(){
-    this.getButtons()
+  beforeMount() {
+    this.getButtons();
   },
-  methods:{
-    async getButtons(){
-        const response = await fetch('/buttonsValues.json')
-        const data = await response.json()
-        this.buttonsValues = data
-        console.log(this.buttonsValues)
-    }
-  }
+  methods: {
+    async getButtons() {
+      const response = await fetch("/buttonsValues.json");
+      const data = await response.json();
+      this.buttonsValues = data;
+    },
+  },
 };
 </script>
 
 <style scoped>
 .calculatorContainer {
   border: 1px solid black;
-  background-color: #20201f;
+  background-color: #202020;
   border-radius: 5px;
-  width: 450px;
-  height: 550px;
-  min-width: fit-content;
-  min-height: fit-content;
+  width: 371px;
+  height: 617px;
+  min-height: 450px;
+  min-width: 310px;
+  padding: 4px;
   resize: both;
-  overflow: auto;
+  overflow: hidden;
+  user-select: none;
 }
-.buttons{
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    height: auto;
-    background-color: pink;
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: auto;
+  height: 62%;
 }
-.button{
-    flex: 0 1 calc(33.33% - 10px);
+.buttons > *:last-child {
+  background-color: #595959;
+  color: black;
+}
+.buttons > *:last-child:hover {
+  background-color: #535353;
+}
+.buttons > *:last-child:active {
+  background-color: #4d4d4d;
+}
+.buttons > *:nth-child(n + 9):nth-child(-n + 11),
+.buttons > *:nth-child(n + 13):nth-child(-n + 15),
+.buttons > *:nth-child(n + 17):nth-child(-n + 19),
+.buttons > *:nth-child(n + 21):nth-child(-n + 23) {
+  background-color: #3b3b3b;
+}
+.buttons > *:nth-child(n + 9):nth-child(-n + 11):hover,
+.buttons > *:nth-child(n + 13):nth-child(-n + 15):hover,
+.buttons > *:nth-child(n + 17):nth-child(-n + 19):hover,
+.buttons > *:nth-child(n + 21):nth-child(-n + 23):hover {
+  background-color: #323232;
+}
+.buttons > *:nth-child(n + 9):nth-child(-n + 11):active,
+.buttons > *:nth-child(n + 13):nth-child(-n + 15):active,
+.buttons > *:nth-child(n + 17):nth-child(-n + 19):active,
+.buttons > *:nth-child(n + 21):nth-child(-n + 23):active {
+  background-color: #272827;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="CalculatorNameBar">
+  <div class="CalculatorTopBar">
     <AppName/>
     <WindowControlButtons />
   </div>
@@ -20,7 +20,7 @@ export default {
 };
 </script>
 <style scoped>
-.CalculatorNameBar {
+.CalculatorTopBar {
   background-color: rgba(0, 0, 0, 0);
   color:white;
   width: 100%;

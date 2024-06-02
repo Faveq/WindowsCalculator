@@ -1,6 +1,6 @@
 <template>
     <div class="inputField">
-        <h1>000 000 000</h1>
+        <h2>000 000 000</h2>
     </div>
   </template>
   
@@ -20,16 +20,18 @@
   <style scoped>
   .inputField{
     display: flex;
-    background-color: #ffffff3e;
     padding: 5px;
     letter-spacing: 1px;
     color: white;
     align-items: center;
     justify-content: end;
     width: 100%;
-    height: 20%;
+    height: 30%;
+    
   }
-  h1 {
-    font-size: 5vmin;
+  h2 {
+    font-size: 2.3em;
+    font-weight: 600;
+    user-select: text;
   }
   </style>
