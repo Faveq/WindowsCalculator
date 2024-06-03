@@ -19,7 +19,7 @@ const input = ref(computed(() => store.userInputString));
   padding: 5px;
   letter-spacing: 1px;
   color: white;
-  align-items: center;
+  align-items: start;
   justify-content: end;
   width: 100%;
 }
@@ -27,5 +27,6 @@ h2 {
   font-size: 2.3em;
   font-weight: 600;
   user-select: text;
+  text-align: center;
 }
 </style>

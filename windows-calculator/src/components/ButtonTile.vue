@@ -31,101 +31,149 @@
 import SvgIcon from "@jamescoyle/vue-icon";
 import { mdiBackspaceOutline } from "@mdi/js";
 import { store } from "../Utilities/Store";
-import { ref, defineProps } from 'vue';
+import { ref, defineProps } from "vue";
 
+const path = ref(mdiBackspaceOutline);
 
-  const path = ref(mdiBackspaceOutline)
-  const isFirstInput = ref(true)
-  const calculationsDone = ref(false)
-
-  const props = defineProps({
+const props = defineProps({
   value: {
     type: [Object, String],
-    required: true
-  }
+    required: true,
+  },
 });
 
-    const insertNumber = (e) => {
-      console.log(calculationsDone.value);
-      if (!calculationsDone.value) {
-        store.userInputString += e.target.value;
-        if (store.userInputString.replace(/\s/g, "").length % 3 == 0) {
-          store.userInputString += " ";
-        }
+const insertNumber = (e) => {
+  if (!store.insertionDone) {
+    store.userInputString += e.target.value;
+    if (store.userInputString.replace(/\s/g, "").length % 3 == 0) {
+      store.userInputString += " ";
+    }
+  } else {
+    store.userInputString = e.target.value;
+    store.insertionDone = false;
+  }
+};
+
+const backspace = () => {
+  store.userInputString[store.userInputString.length - 1] !== " "
+    ? (store.userInputString = store.userInputString.slice(0, -1))
+    : (store.userInputString = store.userInputString.slice(0, -2));
+};
+
+const operation = (operationName) => {
+  store.insertionDone = true;
+  let userInput = parseFloat(store.userInputString.replace(/\s/g, "")); //deleting spaces
+
+  if (store.isFirstInput) {
+    store.equationPreview = userInput;
+    store.result = userInput;
+  }
+
+  switch (operationName) {
+    case "percentage":
+      store.equationPreview += " % ";
+      break;
+    case "clearEntry":
+      store.userInputString = "";
+      break;
+    case "clearEverything":
+      store.userInputString = "";
+      store.equationPreview = "";
+      store.userInputString = "";
+      store.calculated = false;
+      (store.isFirstInput = true),
+        (store.insertionDone = false),
+        (store.result = 0);
+      store.lastOperation = "";
+      return;
+    case "reciprocal":
+      console.log("Operation: reciprocal");
+      break;
+    case "square":
+      store.result = store.result * store.result
+      store.equationPreview = store.result
+      break;
+    case "squareRoot":
+    store.result = Math.sqrt(store.result)
+      store.equationPreview = store.result
+      break;
+    case "divide":
+      if (!store.calculated && !store.isFirstInput) {
+        store.result /= userInput;
+        store.equationPreview = store.result.toString() + " ÷ ";
       } else {
-        console.log("dziala");
-        store.userInputString = e.target.value;
-        calculationsDone.value = false;
+        store.calculated = false;
+        store.equationPreview = store.result.toString() + " ÷ ";
       }
-    }
-    const backspace = ()=> {
-      store.userInputString[store.userInputString.length - 1] !== " "
-        ? (store.userInputString = store.userInputString.slice(0, -1))
-        : (store.userInputString = store.userInputString.slice(0, -2));
-    }
-    const operation = (operationName) => {
-      calculationsDone.value = true;
-      let userInput = parseFloat(store.userInputString.replace(/\s/g, ""));
+      break;
+    case "multiply":
+      if (!store.calculated && !store.isFirstInput) {
+        store.result *= userInput;
+        store.equationPreview = store.result.toString() + " × ";
+      } else {
+        store.calculated = false;
+        store.equationPreview = store.result.toString() + " × ";
+      }
+      break;
+    case "add":
+      if (!store.calculated && !store.isFirstInput) {
+        store.result += userInput;
+        store.equationPreview = store.result.toString() + " + ";
+      } else {
+        store.calculated = false;
+        store.equationPreview = store.result.toString() + " + ";
+      }
+      break;
+    case "substract":
+      if (!store.calculated && !store.isFirstInput) {
+        store.result -= userInput;
+        store.equationPreview = store.result.toString() + " - ";
+      } else {
+        store.calculated = false;
+        store.equationPreview = store.result.toString() + " - ";
+      }
+      break;
+    case "changeSign":
+      console.log("Operation: changeSign");
+      break;
+    case "insertComma":
+      console.log("Operation: insertComma");
+      break;
 
-      console.log("FI: " + isFirstInput.value)
-      isFirstInput.value ? (store.equationPreview = userInput) : console.log("das");
-      isFirstInput.value = false;
+    case "equals":
+      store.calculated = true;
 
-      switch (operationName) {
-        case "percentage":
-          store.equationPreview += " % ";
-          break;
-        case "clearEntry":
-          store.userInputString = "";
-          console.log("FICE: " + isFirstInput.value)
-          break;
-        case "clearEverything":
-          store.userInputString = "";
-          store.equationPreview = "";
-          store.userInputString = "";
-          store.result = 0;
-          break;
-        case "reciprocal":
-          console.log("Operation: reciprocal");
-          break;
-        case "square":
-          console.log("Operation: square");
-          break;
-        case "squareRoot":
-          console.log("Operation: squareRoot");
-          break;
-        case "divide":
-          console.log("Operation: divide");
-          break;
-        case "multiply":
-          console.log("Operation: multiply");
-          break;
+      switch (store.lastOperation) {
         case "add":
           store.result += userInput;
-          store.equationPreview = store.result.toString() + " + ";
-          console.log(store.equationPreview);
           break;
         case "substract":
-          console.log("Operation: substract");
+          store.result -= userInput;
           break;
-        case "changeSign":
-          console.log("Operation: changeSign");
+        case "multiply":
+          store.result *= userInput;
           break;
-        case "insertComma":
-          console.log("Operation: insertComma");
+        case "divide":
+          store.result /= userInput;
           break;
         case "equals":
-          store.result += userInput;
-          store.equationPreview += userInput + " = ";
-          store.userInputString = store.result.toString()
-          isFirstInput.value = true;
-          break;
-        default:
-          console.log("Unknown operation");
-      }
-      
-    }
+          return;
 
+        default:
+          break;
+      }
+      store.equationPreview += userInput + " = ";
+      store.userInputString = store.result.toString();
+      break;
+    default:
+      console.log("Unknown operation");
+  }
+  store.isFirstInput = false;
+  store.insertionDone = true;
+  store.lastOperation = operationName;
+};
+
+//Spamming operation buttons is not a bug, its a feature
 </script>
 
 <style scoped>

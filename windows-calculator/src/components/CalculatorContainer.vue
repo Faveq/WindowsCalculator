@@ -35,14 +35,13 @@ onBeforeMount(getButtons)
 
 <style scoped>
 .calculatorContainer {
-  border: 1px solid black;
   background-color: #202020;
   border-radius: 5px;
   width: 371px;
   height: 617px;
   min-height: 450px;
   min-width: 310px;
-  padding: 4px;
+  padding: 5px;
   resize: both;
   overflow: hidden;
   user-select: none;
