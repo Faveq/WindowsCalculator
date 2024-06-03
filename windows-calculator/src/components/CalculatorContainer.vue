@@ -15,35 +15,22 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import InputField from "./InputArea/InputField.vue";
 import EquationPreview from "./InputArea/EquationPreview.vue";
 import TopBar from "./NameBar/TopBar.vue";
 import ButtonTile from "./ButtonTile.vue";
+import { ref, onBeforeMount } from 'vue';
 
-export default {
-  components: {
-    TopBar,
-    InputField,
-    ButtonTile,
-    EquationPreview
-  },
-  data() {
-    return {
-      buttonsValues: [],
-    };
-  },
-  beforeMount() {
-    this.getButtons();
-  },
-  methods: {
-    async getButtons() {
-      const response = await fetch("/buttonsValues.json");
-      const data = await response.json();
-      this.buttonsValues = data;
-    },
-  },
+const buttonsValues = ref([]);
+
+const getButtons = async () => {
+  const response = await fetch("/buttonsValues.json");
+  const data = await response.json();
+  buttonsValues.value = data;
 };
+
+onBeforeMount(getButtons)
 </script>
 
 <style scoped>

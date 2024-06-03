@@ -4,19 +4,13 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { store } from "../../Utilities/Store";
 import { computed } from "vue";
+import { ref } from "vue";
 
-export default {
-  setup() {
-    const input = computed(() => store.userInputString);
+const input = ref(computed(() => store.userInputString));
 
-    return {
-      input,
-    };
-  },
-};
 </script>
 <style scoped>
 .inputField {

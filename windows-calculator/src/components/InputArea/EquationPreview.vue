@@ -1,20 +1,12 @@
 <template>
-  <h3 class="equationPreview">{{ equationPreviewString }}</h3>
+  <h3 class="equationPreview">{{ equationPreview }}</h3>
 </template>
 
-<script>
-import { computed } from "vue";
+<script setup>
+import { computed, ref } from "vue";
 import { store } from "../../Utilities/Store";
 
-export default {
-  setup() {
-    const equationPreviewString = computed(() => store.userInputString);
-
-    return {
-      equationPreviewString,
-    };
-  },
-};
+const equationPreview = ref(computed(() => store.equationPreview));
 </script>
 <style scoped>
 .equationPreview {

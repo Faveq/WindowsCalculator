@@ -11,22 +11,15 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import SvgIcon from "@jamescoyle/vue-icon";
 import { mdiWindowMinimize } from "@mdi/js";
 import { mdiWindowMaximize } from "@mdi/js";
 import { mdiWindowClose } from "@mdi/js";
+import { ref } from 'vue';
 
-export default {
-  components: {
-    SvgIcon,
-  },
-  data() {
-    return {
-      iconPaths: [mdiWindowMinimize, mdiWindowMaximize, mdiWindowClose],
-    };
-  },
-};
+const iconPaths = ref([mdiWindowMinimize, mdiWindowMaximize, mdiWindowClose])
+
 </script>
 <style scoped>
 .windowControlButtonsContainer{

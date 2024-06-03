@@ -5,19 +5,9 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import AppName from "./AppName.vue";
 import WindowControlButtons from "./WindowControlButtons.vue";
-
-export default {
-  components: {
-    WindowControlButtons,
-    AppName,
-  },
-  data() {
-    return {};
-  },
-};
 </script>
 <style scoped>
 .CalculatorTopBar {
