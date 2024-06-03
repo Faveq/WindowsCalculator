@@ -1,7 +1,10 @@
 <template>
   <div class="calculatorContainer">
     <TopBar />
-    <InputField />
+    <div class="inputArea">
+      <EquationPreview/>
+      <InputField />
+    </div>
     <div class="buttons">
       <ButtonTile
         v-for="(value, key) in buttonsValues"
@@ -13,14 +16,17 @@
 </template>
 
 <script>
-import InputField from "./InputField.vue";
+import InputField from "./InputArea/InputField.vue";
+import EquationPreview from "./InputArea/EquationPreview.vue";
 import TopBar from "./NameBar/TopBar.vue";
 import ButtonTile from "./ButtonTile.vue";
+
 export default {
   components: {
     TopBar,
     InputField,
     ButtonTile,
+    EquationPreview
   },
   data() {
     return {
@@ -53,6 +59,13 @@ export default {
   resize: both;
   overflow: hidden;
   user-select: none;
+}
+.inputArea{
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: center;
 }
 .buttons {
   display: flex;
