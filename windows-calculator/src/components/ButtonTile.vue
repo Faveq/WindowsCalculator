@@ -42,16 +42,41 @@ const props = defineProps({
   },
 });
 
+const convertString = () => {
+  if (!store.userInputString.includes(",")) {
+    store.userInputString = Number(store.userInputString.replace(/\s/g, ""))
+      .toLocaleString("pl-PL")
+      .toString();
+  } //adding spaces beteen groups of numbers
+    
+  
+};
+
 const insertNumber = (e) => {
+  // console.log("---------------------------------------------")
+  // console.log("FDI: " + store.isFirstDigitInput)
+  // console.log("FI: " + store.isFirstInput)
+  // console.log("Calc: " + store.calculated)
+  // console.log("ID: " + store.insertionDone)
+
+  if (store.errorOccured) {
+    clearEverything()
+    store.errorOccured = false
+  }
+
+  if (store.isFirstDigitInput) {
+    store.userInputString = "";
+    store.isFirstDigitInput = false;
+  }
+
   if (!store.insertionDone) {
     store.userInputString += e.target.value;
-    if (store.userInputString.replace(/\s/g, "").length % 3 == 0) {
-      store.userInputString += " ";
-    }
+    convertString() 
   } else {
     store.userInputString = e.target.value;
     store.insertionDone = false;
   }
+  store.lastOperation = "insertion";
 };
 
 const backspace = () => {
@@ -59,114 +84,164 @@ const backspace = () => {
     ? (store.userInputString = store.userInputString.slice(0, -1))
     : (store.userInputString = store.userInputString.slice(0, -2));
 };
+const clearEverything = () =>{
+  store.userInputString = "0";
+  store.equationPreview = "";
+  store.calculated = false;
+  store.isFirstDigitInput = true;
+  store.isFirstInput = true
+  store.insertionDone = false
+  store.result = 0;
+  store.lastOperation = "";
+}
 
 const operation = (operationName) => {
   store.insertionDone = true;
-  let userInput = parseFloat(store.userInputString.replace(/\s/g, "")); //deleting spaces
+  let userInput = parseFloat(store.userInputString.replace(/\s/g, "").replace(/,/g, ".")); //deleting spaces
 
   if (store.isFirstInput) {
-    store.equationPreview = userInput;
+    store.equationPreview = userInput.toLocaleString("pl-PL");
     store.result = userInput;
   }
-
+  isNaN(userInput) ? (userInput = 0) : null;
   switch (operationName) {
     case "percentage":
-      store.equationPreview += " % ";
-      break;
+      userInput = userInput / 100;
+      store.userInputString = userInput.toString();
+      return;
     case "clearEntry":
-      store.userInputString = "";
+      store.userInputString = "0";
+      store.isFirstDigitInput = true;
       break;
     case "clearEverything":
-      store.userInputString = "";
-      store.equationPreview = "";
-      store.userInputString = "";
-      store.calculated = false;
-      (store.isFirstInput = true),
-        (store.insertionDone = false),
-        (store.result = 0);
-      store.lastOperation = "";
+      clearEverything()
       return;
     case "reciprocal":
-      console.log("Operation: reciprocal");
+      store.result = 1 / store.result;
+      store.equationPreview = store.result.toLocaleString("pl-PL");
       break;
     case "square":
-      store.result = store.result * store.result
-      store.equationPreview = store.result
-      break;
+      userInput = userInput * userInput;
+      store.userInputString = userInput.toString();
+      return;
     case "squareRoot":
-    store.result = Math.sqrt(store.result)
-      store.equationPreview = store.result
-      break;
+      userInput = Math.sqrt(userInput);
+      store.userInputString = userInput.toString();
+      return;
     case "divide":
-      if (!store.calculated && !store.isFirstInput) {
-        store.result /= userInput;
-        store.equationPreview = store.result.toString() + " ÷ ";
+      if (!store.calculated && !store.isFirstInput &&  store.lastOperation == "insertion") {
+        if (userInput != 0) {
+          store.result /= userInput;
+          store.equationPreview = store.result.toLocaleString("pl-PL") + " ÷ ";
+        }else{
+          store.userInputString="Error"
+          store.errorOccured = true
+          return
+        }
       } else {
         store.calculated = false;
-        store.equationPreview = store.result.toString() + " ÷ ";
+        store.equationPreview = store.result.toLocaleString("pl-PL") + " ÷ ";
+  
       }
       break;
     case "multiply":
-      if (!store.calculated && !store.isFirstInput) {
+      if (
+        !store.calculated &&
+        !store.isFirstInput &&
+        store.lastOperation == "insertion"
+      ) {
         store.result *= userInput;
-        store.equationPreview = store.result.toString() + " × ";
+        store.equationPreview = store.result.toLocaleString("pl-PL") + " × ";
       } else {
         store.calculated = false;
-        store.equationPreview = store.result.toString() + " × ";
+        store.equationPreview = store.result.toLocaleString("pl-PL") + " × ";
+
       }
       break;
     case "add":
-      if (!store.calculated && !store.isFirstInput) {
+      if (
+        !store.calculated &&
+        !store.isFirstInput &&
+        store.lastOperation == "insertion"
+      ) {
         store.result += userInput;
-        store.equationPreview = store.result.toString() + " + ";
+        store.equationPreview = store.result.toLocaleString("pl-PL") + " + ";
       } else {
         store.calculated = false;
-        store.equationPreview = store.result.toString() + " + ";
+        store.equationPreview = store.result.toLocaleString("pl-PL") + " + ";
+
       }
       break;
     case "substract":
-      if (!store.calculated && !store.isFirstInput) {
+      if (
+        !store.calculated &&
+        !store.isFirstInput &&
+        store.lastOperation == "insertion"
+      ) {
         store.result -= userInput;
-        store.equationPreview = store.result.toString() + " - ";
+        store.equationPreview = store.result.toLocaleString("pl-PL") + " - ";
       } else {
         store.calculated = false;
-        store.equationPreview = store.result.toString() + " - ";
+        store.equationPreview = store.result.toLocaleString("pl-PL") + " - ";
       }
       break;
     case "changeSign":
-      console.log("Operation: changeSign");
-      break;
+      if (store.lastOperation == "equals") {
+        userInput *= -1;
+        store.result *= -1;
+        store.userInputString = userInput.toLocaleString("pl-PL");
+      } else {
+        if (userInput !== 0 && !store.isFirstInput) {
+          userInput = userInput * -1;
+          store.userInputString = userInput.toLocaleString("pl-PL");
+        } else {
+          userInput = userInput * -1;
+          store.userInputString = userInput.toLocaleString("pl-PL");
+          store.equationPreview = "";
+        }
+      }
+      return;
     case "insertComma":
-      console.log("Operation: insertComma");
-      break;
+      if (!store.userInputString.includes(',' || '.')) {
+        store.userInputString += ","; //must be a dot
+        store.insertionDone = false;
+        convertString() 
+      }
+  
+      return;
 
     case "equals":
       store.calculated = true;
-
-      switch (store.lastOperation) {
-        case "add":
+      switch (store.equationPreview[store.equationPreview.length - 2]) {
+        case "+":
           store.result += userInput;
           break;
-        case "substract":
+        case "-":
           store.result -= userInput;
           break;
-        case "multiply":
+        case "×":
           store.result *= userInput;
           break;
-        case "divide":
-          store.result /= userInput;
-          break;
-        case "equals":
+        case "÷":
+          if (userInput != 0) {
+            store.result /= userInput;
+            break;
+          }else{
+            store.userInputString = "Error"
+            store.errorOccured = true
+            return
+          }
+        case "=":
+          return;
+        default:
           return;
 
-        default:
-          break;
       }
-      store.equationPreview += userInput + " = ";
-      store.userInputString = store.result.toString();
+      store.equationPreview += userInput.toLocaleString("pl-PL") + " = ";
+      store.userInputString = store.result.toLocaleString("pl-PL");
       break;
     default:
-      console.log("Unknown operation");
+      return
   }
   store.isFirstInput = false;
   store.insertionDone = true;

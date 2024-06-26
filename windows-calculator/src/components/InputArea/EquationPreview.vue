@@ -6,7 +6,7 @@
 import { computed, ref } from "vue";
 import { store } from "../../Utilities/Store";
 
-const equationPreview = ref(computed(() => store.equationPreview));
+const equationPreview = ref(computed(() => store.equationPreview ))
 </script>
 <style scoped>
 .equationPreview {
