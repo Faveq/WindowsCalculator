@@ -95,6 +95,37 @@ const clearEverything = () =>{
   store.lastOperation = "";
 }
 
+const makeAction = (userInput) =>{
+  store.calculated = true;
+      switch (store.equationPreview[store.equationPreview.length - 2]) {
+        case "+":
+          store.result += userInput;
+          break;
+        case "-":
+          store.result -= userInput;
+          break;
+        case "×":
+          store.result *= userInput;
+          break;
+        case "÷":
+          if (userInput != 0) {
+            store.result /= userInput;
+            console.log(userInput)
+            break;
+          }else{
+            store.userInputString = "Error"
+            store.errorOccured = true
+
+            return
+          }
+        case "=":
+          return;
+        default:
+          return;
+    }
+    store.userInputString = store.result
+}
+
 const operation = (operationName) => {
   store.insertionDone = true;
   let userInput = parseFloat(store.userInputString.replace(/\s/g, "").replace(/,/g, ".")); //deleting spaces
@@ -131,7 +162,7 @@ const operation = (operationName) => {
     case "divide":
       if (!store.calculated && !store.isFirstInput &&  store.lastOperation == "insertion") {
         if (userInput != 0) {
-          store.result /= userInput;
+          makeAction(userInput)
           store.equationPreview = store.result.toLocaleString("pl-PL") + " ÷ ";
         }else{
           store.userInputString="Error"
@@ -150,12 +181,11 @@ const operation = (operationName) => {
         !store.isFirstInput &&
         store.lastOperation == "insertion"
       ) {
-        store.result *= userInput;
+        makeAction(userInput)
         store.equationPreview = store.result.toLocaleString("pl-PL") + " × ";
       } else {
         store.calculated = false;
         store.equationPreview = store.result.toLocaleString("pl-PL") + " × ";
-
       }
       break;
     case "add":
@@ -164,7 +194,7 @@ const operation = (operationName) => {
         !store.isFirstInput &&
         store.lastOperation == "insertion"
       ) {
-        store.result += userInput;
+        makeAction(userInput)
         store.equationPreview = store.result.toLocaleString("pl-PL") + " + ";
       } else {
         store.calculated = false;
@@ -178,7 +208,7 @@ const operation = (operationName) => {
         !store.isFirstInput &&
         store.lastOperation == "insertion"
       ) {
-        store.result -= userInput;
+        makeAction(userInput)
         store.equationPreview = store.result.toLocaleString("pl-PL") + " - ";
       } else {
         store.calculated = false;
@@ -211,34 +241,9 @@ const operation = (operationName) => {
       return;
 
     case "equals":
-      store.calculated = true;
-      switch (store.equationPreview[store.equationPreview.length - 2]) {
-        case "+":
-          store.result += userInput;
-          break;
-        case "-":
-          store.result -= userInput;
-          break;
-        case "×":
-          store.result *= userInput;
-          break;
-        case "÷":
-          if (userInput != 0) {
-            store.result /= userInput;
-            break;
-          }else{
-            store.userInputString = "Error"
-            store.errorOccured = true
-            return
-          }
-        case "=":
-          return;
-        default:
-          return;
-
-      }
+      makeAction(userInput)
       store.equationPreview += userInput.toLocaleString("pl-PL") + " = ";
-      store.userInputString = store.result.toLocaleString("pl-PL");
+     !store.errorOccured ? store.userInputString = store.result.toLocaleString("pl-PL") : null
       break;
     default:
       return

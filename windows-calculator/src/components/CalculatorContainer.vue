@@ -60,7 +60,7 @@ onBeforeMount(getButtons)
   justify-content: center;
   gap: 2px;
   width: auto;
-  height: 62%;
+  height: 63%;
 }
 .buttons > *:last-child {
   background-color: #595959;
