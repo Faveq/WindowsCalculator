@@ -25,7 +25,7 @@ import { ref, onBeforeMount } from 'vue';
 const buttonsValues = ref([]);
 
 const getButtons = async () => {
-  const response = await fetch("/WindowsCalculator/buttonsValues.json");
+  const response = await fetch("/buttonsValues.json");
   const data = await response.json();
   buttonsValues.value = data;
 };
